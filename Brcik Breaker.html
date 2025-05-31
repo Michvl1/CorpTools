@@ -5,64 +5,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mysterious Brick Breaker</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       background-color: rgb(24, 5, 99);
       color: white;
       font-family: 'Courier New', Courier, monospace;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       height: 100vh;
-      overflow: hidden;
-      transition: background-color 0.5s, color 0.5s;
+      overflow-x: hidden;
     }
+
     canvas {
+      width: 100%;
+      height: auto;
+      max-width: 100vw;
+      max-height: 80vh;
       border: 2px solid white;
       background-color: black;
+      display: block;
     }
-    button {
-      margin: 10px;
+
+    #message {
+      font-size: 28px;
+      font-weight: bold;
+      position: absolute;
+      top: 10px;
+      display: none;
+    }
+
+    #touchControls {
+      position: fixed;
+      bottom: 60px;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
       padding: 10px 20px;
+      z-index: 99;
+    }
+
+    #touchControls button {
+      background-color: rgba(255,255,255,0.8);
+      color: black;
+      font-size: 32px;
+      border: none;
+      border-radius: 10px;
+      width: 100px;
+      height: 60px;
+      box-shadow: 0 0 5px #000;
+    }
+
+    #startBtn, #playAgainBtn {
+      margin: 10px;
+      padding: 12px 24px;
       background: white;
       color: black;
       font-weight: bold;
       border: none;
       cursor: pointer;
-      transition: background-color 0.3s, color 0.3s;
+      border-radius: 6px;
     }
-    #message {
-      font-size: 32px;
-      font-weight: bold;
-      position: absolute;
-      top: 20px;
+
+    #playAgainBtn {
       display: none;
+      background-color: green;
+      color: white;
     }
-    #buyCoffeeBtn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: gold;
-    }
-    #refreshGameBtn {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background: linear-gradient(to right, brown, orange);
-      color: yellow;
-    }
-    #downloadSection {
-      display: none;
-      position: absolute;
-      top: 100px;
-      right: 20px;
-      background: white;
-      color: black;
-      padding: 10px;
-      border-radius: 5px;
-      z-index: 10;
-    }
+
     footer {
       position: fixed;
       bottom: 0;
@@ -78,100 +89,33 @@
       user-select: none;
       z-index: 100;
     }
+
     footer button {
       background: #444;
       color: white;
       padding: 6px 12px;
-      margin: 0;
-      font-weight: normal;
+      border: none;
       border-radius: 4px;
     }
+
     a.footer-link {
       color: #ccc;
       text-decoration: none;
       margin-left: 10px;
       font-size: 14px;
     }
-    a.footer-link:hover {
-      text-decoration: underline;
-    }
-
-    /* Light Theme */
-    body.light-theme {
-      background-color: #f0f0f0;
-      color: #222;
-    }
-    body.light-theme canvas {
-      background-color: #eee;
-      border-color: #222;
-    }
-    body.light-theme button {
-      background: #ddd;
-      color: #222;
-    }
-    body.light-theme #buyCoffeeBtn {
-      background-color: goldenrod;
-      color: black;
-    }
-    body.light-theme #refreshGameBtn {
-      background: linear-gradient(to right, #a0522d, #ffa500);
-      color: black;
-    }
-    body.light-theme footer {
-      background: rgba(240,240,240,0.8);
-      color: #222;
-    }
-    body.light-theme footer button {
-      background: #bbb;
-      color: #222;
-    }
-
-    /* Dark Theme */
-    body.dark-theme {
-      background-color: #121212;
-      color: #eee;
-    }
-    body.dark-theme canvas {
-      background-color: #222;
-      border-color: #eee;
-    }
-    body.dark-theme button {
-      background: #333;
-      color: #eee;
-    }
-    body.dark-theme #buyCoffeeBtn {
-      background-color: #daa520;
-      color: #111;
-    }
-    body.dark-theme #refreshGameBtn {
-      background: linear-gradient(to right, #654321, #cc8400);
-      color: #ffd700;
-    }
-    body.dark-theme footer {
-      background: rgba(18,18,18,0.9);
-      color: #eee;
-    }
-    body.dark-theme footer button {
-      background: #555;
-      color: #eee;
-    }
   </style>
 </head>
 <body>
   <button id="startBtn">Start Game</button>
-  <button id="playAgainBtn" style="display:none; background: green; color: white;">PLAY AGAIN</button>
-  <button id="buyCoffeeBtn" onclick="window.open('https://paypal.me/Mshobande','_blank')">Buy Me a Coffee</button>
-  <button id="refreshGameBtn" onclick="location.reload()">Refresh Game</button>
+  <button id="playAgainBtn">Play Again</button>
   <div id="message"></div>
-  <canvas id="gameCanvas" width="800" height="600"></canvas>
-  <div id="downloadSection">
-    <p>Password:</p>
-    <input type="password" id="downloadPassword" />
-    <button onclick="checkPassword()">Submit</button>
-    <button onclick="document.getElementById('downloadSection').style.display='none'">Close</button>
-    <div id="downloadLinkContainer" style="margin-top: 10px;"></div>
+  <canvas id="gameCanvas"></canvas>
+
+  <div id="touchControls">
+    <button id="leftBtn">◀️</button>
+    <button id="rightBtn">▶️</button>
   </div>
-  <button onclick="document.getElementById('downloadSection').style.display='block'">Download Me</button>
 
   <footer>
     <div>© <span id="year"></span> Michael Shobande</div>
@@ -182,32 +126,17 @@
   </footer>
 
   <script>
-    // Set copyright year dynamically
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Theme toggle logic: cycles through default (no class), dark-theme, light-theme
-    const themeBtn = document.getElementById('themeBtn');
-    let currentTheme = 0; // 0 = default, 1 = dark, 2 = light
-
-    themeBtn.addEventListener('click', () => {
-      currentTheme = (currentTheme + 1) % 3;
-      document.body.classList.remove('dark-theme', 'light-theme');
-      if (currentTheme === 1) {
-        document.body.classList.add('dark-theme');
-      } else if (currentTheme === 2) {
-        document.body.classList.add('light-theme');
-      }
-    });
-
-    // Rest of your original game code...
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
+    canvas.width = 800;
+    canvas.height = 600;
+
     const startBtn = document.getElementById('startBtn');
     const playAgainBtn = document.getElementById('playAgainBtn');
     const message = document.getElementById('message');
 
-    let gameStarted = false;
-    let multiplayer = false;
     let gameOver = false;
 
     const paddleHeight = 10;
@@ -217,8 +146,7 @@
     const brickWidth = (canvas.width - 40) / cols - 4, brickHeight = 15, padding = 4, offsetTop = 120, offsetLeft = 20;
 
     let players = [
-      { x: canvas.width / 2 - 50, dx: 0, width: 100, controls: ['ArrowLeft', 'ArrowRight'] },
-      { x: canvas.width / 2 - 50, dx: 0, width: 100, controls: ['a', 'd'] },
+      { x: canvas.width / 2 - 50, dx: 0, width: 100, controls: ['ArrowLeft', 'ArrowRight'] }
     ];
 
     let balls = [
@@ -246,8 +174,8 @@
 
     function drawPaddles() {
       players.forEach((p, i) => {
-        ctx.fillStyle = i === 0 ? 'white' : 'gray';
-        ctx.fillRect(p.x, canvas.height - (i + 1) * 20, p.width, paddleHeight);
+        ctx.fillStyle = 'white';
+        ctx.fillRect(p.x, canvas.height - 30, p.width, paddleHeight);
       });
     }
 
@@ -295,7 +223,7 @@
         }
 
         players.forEach((p, i) => {
-          const py = canvas.height - (i + 1) * 20;
+          const py = canvas.height - 30;
           if (
             ball.y + ballRadius >= py &&
             ball.y - ballRadius <= py + paddleHeight &&
@@ -343,23 +271,6 @@
       }, 300);
     }
 
-    function checkPassword() {
-      const password = document.getElementById('downloadPassword').value;
-      const linkContainer = document.getElementById('downloadLinkContainer');
-      linkContainer.innerHTML = '';
-      if (password === 'BREAKBRICK') {
-        const blob = new Blob([document.documentElement.outerHTML], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'brick-breaker-game.txt';
-        a.innerText = 'Download HTML';
-        linkContainer.appendChild(a);
-      } else {
-        linkContainer.innerText = 'Incorrect Password';
-      }
-    }
-
     document.addEventListener('keydown', e => {
       players.forEach(p => {
         if (e.key === p.controls[0]) p.dx = -6;
@@ -373,9 +284,28 @@
       });
     });
 
+    // Touch controls
+    let leftPressed = false;
+    let rightPressed = false;
+
+    document.getElementById('leftBtn').addEventListener('touchstart', () => leftPressed = true);
+    document.getElementById('leftBtn').addEventListener('touchend', () => leftPressed = false);
+    document.getElementById('rightBtn').addEventListener('touchstart', () => rightPressed = true);
+    document.getElementById('rightBtn').addEventListener('touchend', () => rightPressed = false);
+
+    function movePaddles() {
+      players.forEach(p => {
+        if (leftPressed) p.dx = -6;
+        else if (rightPressed) p.dx = 6;
+        else p.dx = 0;
+
+        p.x += p.dx;
+        if (p.x < 0) p.x = 0;
+        if (p.x + p.width > canvas.width) p.x = canvas.width - p.width;
+      });
+    }
+
     startBtn.addEventListener('click', () => {
-      multiplayer = confirm("Enable 2-player mode? (Cancel for single player)");
-      if (!multiplayer) players = [players[0]];
       createBricks();
       resetBall();
       gameOver = false;
@@ -387,10 +317,8 @@
 
     playAgainBtn.addEventListener('click', () => {
       players = [
-        { x: canvas.width / 2 - 50, dx: 0, width: 100, controls: ['ArrowLeft', 'ArrowRight'] },
-        { x: canvas.width / 2 - 50, dx: 0, width: 100, controls: ['a', 'd'] },
+        { x: canvas.width / 2 - 50, dx: 0, width: 100, controls: ['ArrowLeft', 'ArrowRight'] }
       ];
-      multiplayer = false;
       createBricks();
       resetBall();
       gameOver = false;
