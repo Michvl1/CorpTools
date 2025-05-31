@@ -1,0 +1,10 @@
+setTimeout(() => {
+  redLight.classList.remove('on');
+  amberLight.classList.add('on');
+}, 1000);
+
+setTimeout(() => {
+  amberLight.classList.remove('on');
+  greenLight.classList.add('on');
+  callback();
+}, 2000);

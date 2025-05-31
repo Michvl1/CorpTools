@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About Mysterious Brick Breaker</title>
+  <style>
+    body {
+      background-color: #180563;
+      color: white;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 20px;
+      line-height: 1.6;
+    }
+    a {
+      color: gold;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    h1 {
+      border-bottom: 2px solid gold;
+      padding-bottom: 10px;
+    }
+    .footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>About Mysterious Brick Breaker</h1>
+  <p>
+    This game is a fun and colorful twist on the classic brick breaker arcade game. You control one or two paddles
+    at the bottom of the screen, bouncing the ball to break all the colorful bricks above. The goal is to clear
+    all bricks without losing the ball.
+  </p>
+  <p>
+    You can play solo or enable two-player mode, where each player controls a paddle using different keys.
+  </p>
+  <p>
+    This page exists to introduce players to the game, explain how it works, and provide a little background on its
+    purpose. It also offers a way to contact or support the developer.
+  </p>
+  <p>
+    Developed by Michael Shobande. If you like the game, feel free to buy me a coffee from the main page!
+  </p>
+  <p>
+    <a href="index.html">Back to Game</a>
+  </p>
+
+  <div class="footer">
+    © Michael Shobande, <span id="year"></span>
+  </div>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Typing Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Basic Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .stats {
+      margin: 15px 0;
+      font-size: 1.1em;
+    }
+
+    #word {
+      font-size: 2em;
+      margin: 20px 0;
+      color: #333;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 1.1em;
+      margin-bottom: 20px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 1em;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .start { background: #28a745; color: white; }
+    .pause { background: #ffc107; color: white; }
+    .restart { background: #dc3545; color: white; }
+
+    #gameOver {
+      display: none;
+      font-size: 1.2em;
+      margin-top: 15px;
+      color: #dc3545;
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 20px;
+      }
+
+      #word {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Typing Game</h1>
+    <div class="stats">
+      ⏱️ Time Left: <span id="time">180</span>s |
+      🏆 Score: <span id="score">0</span>
+    </div>
+
+    <div id="word">Press Start</div>
+
+    <input type="text" id="input" placeholder="Type here..." disabled />
+
+    <div class="buttons">
+      <button class="start" id="startBtn">Start Game</button>
+      <button class="pause" id="pauseBtn" disabled>Pause</button>
+      <button class="restart" id="restartBtn" disabled>Restart</button>
+    </div>
+
+    <div id="gameOver">⛔ Time's up! Final Score: <span id="finalScore"></span></div>
+  </div>
+
+  <script>
+    // Word list (simple for demo)
+    const words = [
+      'apple', 'banana', 'cherry', 'orange', 'grape', 'melon',
+      'keyboard', 'javascript', 'function', 'variable', 'object',
+      'loop', 'array', 'string', 'boolean', 'html', 'css', 'random'
+    ];
+
+    let score = 0;
+    let timeLeft = 180;
+    let timer;
+    let isPaused = false;
+    let currentWord = '';
+
+    // DOM elements
+    const timeEl = document.getElementById('time');
+    const scoreEl = document.getElementById('score');
+    const wordEl = document.getElementById('word');
+    const inputEl = document.getElementById('input');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const gameOverEl = document.getElementById('gameOver');
+    const finalScoreEl = document.getElementById('finalScore');
+
+    // Start Game
+    function startGame() {
+      score = 0;
+      timeLeft = 180;
+      isPaused = false;
+      scoreEl.textContent = score;
+      timeEl.textContent = timeLeft;
+      inputEl.value = '';
+      inputEl.disabled = false;
+      inputEl.focus();
+      startBtn.disabled = true;
+      pauseBtn.disabled = false;
+      restartBtn.disabled = false;
+      gameOverEl.style.display = 'none';
+      generateWord();
+      startTimer();
+    }
+
+    // Generate a random word
+    function generateWord() {
+      const randomIndex = Math.floor(Math.random() * words.length);
+      currentWord = words[randomIndex];
+      wordEl.textContent = currentWord;
+    }
+
+    // Timer function
+    function startTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        if (!isPaused) {
+          timeLeft--;
+          timeEl.textContent = timeLeft;
+
+          if (timeLeft <= 0) {
+            endGame();
+          }
+        }
+      }, 1000);
+    }
+
+    // Check user input
+    inputEl.addEventListener('input', () => {
+      if (inputEl.value.trim() === currentWord) {
+        score++;
+        scoreEl.textContent = score;
+        inputEl.value = '';
+        generateWord();
+      }
+    });
+
+    // Pause/Resume toggle
+    pauseBtn.addEventListener('click', () => {
+      isPaused = !isPaused;
+      pauseBtn.textContent = isPaused ? 'Resume' : 'Pause';
+      if (!isPaused) inputEl.focus();
+    });
+
+    // Restart game
+    function restartGame() {
+      clearInterval(timer);
+      pauseBtn.textContent = 'Pause';
+      startGame();
+    }
+
+    // End game
+    function endGame() {
+      clearInterval(timer);
+      inputEl.disabled = true;
+      wordEl.textContent = 'Game Over';
+      gameOverEl.style.display = 'block';
+      finalScoreEl.textContent = score;
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+    }
+
+    // Event Listeners
+    startBtn.addEventListener('click', startGame);
+    restartBtn.addEventListener('click', restartGame);
+  </script>
+</body>
+</html>
